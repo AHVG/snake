@@ -66,8 +66,8 @@ sf::Vector2i Snake::getDirection() const{
 }
 
 void Snake::grow(){
-    BodyPart *finalPart = *(body.end());
-    body.push_back(new BodyPart(finalPart->getPosition(), sf::Color::Green));
+    BodyPart *finalPart = body.at(body.size() - 1);
+    body.emplace_back(new BodyPart(finalPart->getPosition(), sf::Color::Green));
 }
 
 int Snake::getSize() const{
