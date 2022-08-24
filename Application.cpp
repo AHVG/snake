@@ -1,5 +1,6 @@
 #include "Window.h"
 #include "Application.h"
+#include "Field.h"
 
 Application::Application(){
     window = WindowInstance;
@@ -29,6 +30,7 @@ void Application::handleUpdate(){
 
 void Application::handleRendering(){
     window->clear();
+    FieldInstance->render();
     snake.render();
     window->display();
 }

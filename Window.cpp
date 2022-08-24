@@ -2,7 +2,7 @@
 
 Window *Window::instance = nullptr;
 
-Window::Window() : window(new sf::RenderWindow(sf::VideoMode(200, 200), "SFML works!")){}
+Window::Window() : window(new sf::RenderWindow(sf::VideoMode(320, 320), "Snake")){}
 
 Window *Window::getInstance(){
     if(instance == nullptr)

@@ -2,6 +2,7 @@
 #include "Window.h"
 
 sf::RenderWindow *BodyPart::window = WindowInstance;
+const sf::Vector2f BodyPart::size = FieldInstance->getTileSize();
 
 BodyPart::BodyPart(){
     position = sf::Vector2i(0,0);
@@ -29,15 +30,17 @@ sf::Color BodyPart::getColor() const{
 void BodyPart::render(){
     sf::RectangleShape shape;
     shape.setFillColor(color);
-    shape.setPosition(sf::Vector2f(position) * 10.f);
-    shape.setSize(sf::Vector2f(size, size));
+    shape.setPosition(sf::Vector2f(position) * 20.f + sf::Vector2f(10.0,10.0));
+    shape.setSize(size);
     window->draw(shape);
 }
 
-BodyPart &BodyPart::operator=(const BodyPart &other){
+const BodyPart &BodyPart::operator=(const BodyPart &other){
     position = other.getPosition();
     color = other.getColor();
+    return *this;
 }
+
 
 
 
@@ -72,11 +75,26 @@ int Snake::getSize() const{
 }
 
 void Snake::moveForward(){
+
     for(int i = body.size() - 1; i > 0; i--){
         body.at(i)->setPosition(body.at(i - 1)->getPosition());
     }
     BodyPart *head = body.at(0);
     head->setPosition(head->getPosition() + direction);
+    sf::Vector2i headPos = head->getPosition();
+
+    if(headPos.x < 0){
+        head->setPosition(sf::Vector2i(FieldInstance->getSize().x - 1, headPos.y));
+    }
+    if(headPos.x > FieldInstance->getSize().x - 1){
+        head->setPosition(sf::Vector2i(0, head->getPosition().y));
+    }
+    if(headPos.y < 0){
+        head->setPosition(sf::Vector2i(headPos.x, FieldInstance->getSize().y - 1));
+    }
+    if(headPos.y > FieldInstance->getSize().y - 1){
+        head->setPosition(sf::Vector2i(headPos.x, 0));
+    }
 }
 
 void Snake::handleInput(){

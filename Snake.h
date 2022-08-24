@@ -3,13 +3,14 @@
 
 #include <SFML/Graphics.hpp>
 #include <vector>
+#include "Field.h"
 
 class BodyPart {
 
     private:
 
     static sf::RenderWindow *window;
-    const static int size = 10;
+    static const sf::Vector2f size;
 
     sf::Vector2i position;
     sf::Color color;
@@ -27,7 +28,7 @@ class BodyPart {
 
     void render();
 
-    BodyPart &operator=(const BodyPart &other);
+    const BodyPart &operator=(const BodyPart &other);
 
 };
 
