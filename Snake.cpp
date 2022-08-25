@@ -170,6 +170,7 @@ void Snake::handleInput(){
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && getCurrentDirection().x != -1)
         setNextDirection(sf::Vector2i(1,0));
 
+    // TESTE
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::C))
         eat(getHeadPosition());
 }

@@ -3,18 +3,22 @@
 
 #include <vector>
 #include <SFML/Graphics.hpp>
-#include "Snake.h"
-#include "Food.h"
+#include "ApplicationState.h"
+
+class ApplicationState;
+class InMenu;
+class InGame;
+class InEndGame;
 
 class Application {
 
     private:
 
     sf::RenderWindow *window;
-    Snake snake;
-    Food food;
+    ApplicationState *currentState;
 
     void handleEvent();
+    void handleTrasition();
     void handleUpdate();
     void handleRendering();
 
@@ -27,5 +31,6 @@ class Application {
     void run();
 
 };
+
 
 #endif // APPLICATION_H_INCLUDED
