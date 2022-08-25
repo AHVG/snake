@@ -13,7 +13,8 @@ class Field {
 
     sf::RenderWindow *window;
     const sf::Vector2i size = sf::Vector2i(15, 15);
-    const sf::Vector2f tileSize = sf::Vector2f(20, 20);
+    const sf::Vector2f tileSize = sf::Vector2f(20.0, 20.0);
+    const sf::Vector2f margin = sf::Vector2f(10.0,10.0);
 
     public:
 
@@ -21,6 +22,7 @@ class Field {
 
     sf::Vector2i getSize() const;
     sf::Vector2f getTileSize() const;
+    sf::Vector2f getMargin() const;
 
     static Field *getInstance();
 

@@ -11,6 +11,10 @@ BodyPart::BodyPart(){
 
 BodyPart::BodyPart(sf::Vector2i pos, const sf::Color &col) : position(pos), color(col){}
 
+sf::Vector2f BodyPart::getSize() const{
+    return size;
+}
+
 void BodyPart::setPosition(const sf::Vector2i &newPosition){
     position = newPosition;
 }
@@ -30,7 +34,7 @@ sf::Color BodyPart::getColor() const{
 void BodyPart::render(){
     sf::RectangleShape shape;
     shape.setFillColor(color);
-    shape.setPosition(sf::Vector2f(position) * 20.f + sf::Vector2f(10.0,10.0));
+    shape.setPosition(sf::Vector2f(position.x * getSize().x, position.y * getSize().y) + FieldInstance->getMargin());
     shape.setSize(size);
     window->draw(shape);
 }
@@ -45,8 +49,10 @@ const BodyPart &BodyPart::operator=(const BodyPart &other){
 
 
 Snake::Snake(){
-    direction = sf::Vector2i(0,1);
+    currentDirection = sf::Vector2i(0,1);
+    nextDirection = currentDirection;
     body.push_back(new BodyPart(sf::Vector2i(0,0), sf::Color::Green));
+    canGrow = false;
 }
 
 Snake::~Snake(){
@@ -57,17 +63,44 @@ Snake::~Snake(){
     body.clear();
 }
 
-void Snake::setDirection(const sf::Vector2i &newDirection){
-    direction = newDirection;
+void Snake::setCurrentDirection(const sf::Vector2i &newDirection){
+    currentDirection = newDirection;
 }
 
-sf::Vector2i Snake::getDirection() const{
-    return direction;
+sf::Vector2i Snake::getCurrentDirection() const{
+    return currentDirection;
+}
+
+void Snake::setNextDirection(const sf::Vector2i &newDirection){
+    nextDirection = newDirection;
+}
+
+sf::Vector2i Snake::getNextDirection() const{
+    return nextDirection;
+}
+
+sf::Vector2i Snake::getHeadPosition() const{
+    return body.at(0)->getPosition();
+}
+
+std::vector<sf::Vector2i> Snake::getPositions() const{
+    std::vector<sf::Vector2i> positions;
+    for(auto bodyPart : body)
+        positions.push_back(bodyPart->getPosition());
+    return positions;
+}
+
+bool Snake::ate(const sf::Vector2i &foodPosition) {
+    canGrow = false;
+    if(getHeadPosition() == foodPosition)
+        return (canGrow = true);
+    return canGrow;
 }
 
 void Snake::grow(){
     BodyPart *finalPart = body.at(body.size() - 1);
-    body.emplace_back(new BodyPart(finalPart->getPosition(), sf::Color::Green));
+    body.push_back(new BodyPart(finalPart->getPosition(), sf::Color::Green));
+    canGrow = false;
 }
 
 int Snake::getSize() const{
@@ -75,53 +108,46 @@ int Snake::getSize() const{
 }
 
 void Snake::moveForward(){
-
-    for(int i = body.size() - 1; i > 0; i--){
+    for(int i = body.size() - 1; i > 0; i--)
         body.at(i)->setPosition(body.at(i - 1)->getPosition());
-    }
+
     BodyPart *head = body.at(0);
-    head->setPosition(head->getPosition() + direction);
+    head->setPosition(head->getPosition() + getCurrentDirection());
     sf::Vector2i headPos = head->getPosition();
 
-    if(headPos.x < 0){
+    if(headPos.x < 0)
         head->setPosition(sf::Vector2i(FieldInstance->getSize().x - 1, headPos.y));
-    }
-    if(headPos.x > FieldInstance->getSize().x - 1){
+    if(headPos.x > FieldInstance->getSize().x - 1)
         head->setPosition(sf::Vector2i(0, head->getPosition().y));
-    }
-    if(headPos.y < 0){
+    if(headPos.y < 0)
         head->setPosition(sf::Vector2i(headPos.x, FieldInstance->getSize().y - 1));
-    }
-    if(headPos.y > FieldInstance->getSize().y - 1){
+    if(headPos.y > FieldInstance->getSize().y - 1)
         head->setPosition(sf::Vector2i(headPos.x, 0));
-    }
 }
 
 void Snake::handleInput(){
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && getDirection().y != 1){
-        setDirection(sf::Vector2i(0,-1));
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && getDirection().y != -1){
-        setDirection(sf::Vector2i(0,1));
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && getDirection().x != 1){
-        setDirection(sf::Vector2i(-1,0));
-    }
-    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && getDirection().x != -1){
-        setDirection(sf::Vector2i(1,0));
-    }
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && getCurrentDirection().y != 1)
+        setNextDirection(sf::Vector2i(0,-1));
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && getCurrentDirection().y != -1)
+        setNextDirection(sf::Vector2i(0,1));
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left) && getCurrentDirection().x != 1)
+        setNextDirection(sf::Vector2i(-1,0));
+    else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && getCurrentDirection().x != -1)
+        setNextDirection(sf::Vector2i(1,0));
 }
 
 void Snake::update(){
     handleInput();
     if(clock.getElapsedTime().asMilliseconds() >= velocity){
+        if(canGrow)
+            grow();
+        setCurrentDirection(nextDirection);
         moveForward();
         clock.restart();
     }
 }
 
 void Snake::render(){
-    for(auto &bodyPart : body){
+    for(auto &bodyPart : body)
         bodyPart->render();
-    }
 }

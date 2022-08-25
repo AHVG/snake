@@ -1,8 +1,10 @@
 #ifndef APPLICATION_H_INCLUDED
 #define APPLICATION_H_INCLUDED
 
+#include <vector>
 #include <SFML/Graphics.hpp>
 #include "Snake.h"
+#include "Food.h"
 
 class Application {
 
@@ -10,10 +12,13 @@ class Application {
 
     sf::RenderWindow *window;
     Snake snake;
+    Food food;
 
     void handleEvent();
     void handleUpdate();
     void handleRendering();
+
+    void generateApplePosition(std::vector<sf::Vector2i> snakePositions);
 
     public:
 

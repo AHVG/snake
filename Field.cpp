@@ -17,6 +17,10 @@ sf::Vector2f Field::getTileSize() const{
     return tileSize;
 }
 
+sf::Vector2f Field::getMargin() const{
+    return margin;
+}
+
 Field *Field::getInstance(){
     if(instance == nullptr)
         instance = new Field;
@@ -24,7 +28,6 @@ Field *Field::getInstance(){
 }
 
 void Field::render(){
-    sf::Vector2f margin = sf::Vector2f(10.0,10.0);
     sf::RectangleShape shape;
     shape.setSize(sf::Vector2f(getTileSize()));
     for(int line = 0; line < getSize().x; line++){
@@ -33,7 +36,7 @@ void Field::render(){
                 shape.setFillColor(sf::Color(50,50,50));
             else
                 shape.setFillColor(sf::Color::Black);
-            sf::Vector2f pos = sf::Vector2f(getTileSize().x * column + margin.x, getTileSize().y * line + margin.y);
+            sf::Vector2f pos = sf::Vector2f(getTileSize().x * column + getMargin().x, getTileSize().y * line + getMargin().y);
             shape.setPosition(pos);
             window->draw(shape);
         }

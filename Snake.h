@@ -20,6 +20,8 @@ class BodyPart {
     BodyPart();
     BodyPart(sf::Vector2i pos, const sf::Color &col);
 
+    sf::Vector2f getSize() const;
+
     void setPosition(const sf::Vector2i &newPosition);
     sf::Vector2i getPosition() const;
 
@@ -39,17 +41,28 @@ class Snake {
 
     const int velocity = 300;
 
-    sf::Vector2i direction;
+    sf::Vector2i currentDirection;
+    sf::Vector2i nextDirection;
     std::vector<BodyPart *> body;
     sf::Clock clock;
+
+    bool canGrow;
 
     public:
 
     Snake();
     ~Snake();
 
-    void setDirection(const sf::Vector2i &newDirection);
-    sf::Vector2i getDirection() const;
+    void setCurrentDirection(const sf::Vector2i &newDirection);
+    sf::Vector2i getCurrentDirection() const;
+
+    void setNextDirection(const sf::Vector2i &newDirection);
+    sf::Vector2i getNextDirection() const;
+
+    sf::Vector2i getHeadPosition() const;
+    std::vector<sf::Vector2i> getPositions() const;
+
+    bool ate(const sf::Vector2i &foodPosition);
 
     void grow();
     int getSize() const;
