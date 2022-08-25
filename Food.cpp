@@ -28,7 +28,7 @@ sf::Vector2i Food::getPosition() const{
 
 void Food::render(){
     sf::RectangleShape shape;
-    shape.setFillColor(sf::Color::Red);
+    shape.setFillColor(sf::Color(255,255,255));
     shape.setSize(getSize());
     shape.setPosition(sf::Vector2f(position.x * getSize().x, position.y * getSize().y) + FieldInstance->getMargin());
     window->draw(shape);

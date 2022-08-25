@@ -5,9 +5,10 @@
 #include "Application.h"
 #include "Field.h"
 
-Application::Application() : food(sf::Vector2i(10,10)){
+Application::Application(){
     window = WindowInstance;
     std::srand(time(NULL));
+    generateFoodPosition();
 }
 
 void Application::run(){
@@ -57,6 +58,5 @@ void Application::generateFoodPosition(){
         }
     }
     food.setPosition(freePositions.at(std::rand()%freePositions.size()));
-    std::cout << "Aqui" << std::endl;
 }
 

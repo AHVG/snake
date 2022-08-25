@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include "Snake.h"
 #include "Window.h"
 
@@ -52,7 +53,7 @@ const BodyPart &BodyPart::operator=(const BodyPart &other){
 Snake::Snake(){
     currentDirection = sf::Vector2i(0,1);
     nextDirection = currentDirection;
-    body.push_back(new BodyPart(sf::Vector2i(0,0), sf::Color::Green));
+    body.push_back(new BodyPart(sf::Vector2i(0,0), getNextColor()));
     canGrow = false;
 }
 
@@ -91,6 +92,32 @@ std::vector<sf::Vector2i> Snake::getPositions() const{
     return positions;
 }
 
+int Snake::getSize() const{
+    return body.size();
+}
+
+sf::Color Snake::getNextColor(){
+    int chosen = std::rand()%3;
+    if(chosen == 0)
+        return sf::Color::Red;
+    else if(chosen == 1)
+        return sf::Color::Green;
+    return sf::Color::Blue;
+}
+
+void Snake::reset(){
+    for(auto &bodyPart : body){
+        delete bodyPart;
+        bodyPart = nullptr;
+    }
+    body.clear();
+
+    currentDirection = sf::Vector2i(0,1);
+    nextDirection = currentDirection;
+    body.push_back(new BodyPart(sf::Vector2i(0,0), getNextColor()));
+    canGrow = false;
+}
+
 bool Snake::eat(const sf::Vector2i &foodPosition) {
     if(getHeadPosition() == foodPosition){
         canGrow = true;
@@ -99,14 +126,20 @@ bool Snake::eat(const sf::Vector2i &foodPosition) {
     return false;
 }
 
-void Snake::grow(){
-    BodyPart *finalPart = body.at(body.size() - 1);
-    body.push_back(new BodyPart(finalPart->getPosition(), sf::Color::Green));
-    canGrow = false;
+bool Snake::collidedWithYourself() const{
+    std::vector<sf::Vector2i> positions = getPositions();
+    std::reverse(positions.begin(), positions.end());
+    positions.pop_back();
+    for(auto position : positions)
+        if(position == getHeadPosition())
+            return true;
+    return false;
 }
 
-int Snake::getSize() const{
-    return body.size();
+void Snake::grow(){
+    BodyPart *finalPart = body.at(body.size() - 1);
+    body.push_back(new BodyPart(finalPart->getPosition(), getNextColor()));
+    canGrow = false;
 }
 
 void Snake::moveForward(){
@@ -136,12 +169,17 @@ void Snake::handleInput(){
         setNextDirection(sf::Vector2i(-1,0));
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && getCurrentDirection().x != -1)
         setNextDirection(sf::Vector2i(1,0));
+
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::C))
+        eat(getHeadPosition());
 }
 
 void Snake::update(){
     handleInput();
     if(clock.getElapsedTime().asMilliseconds() >= velocity){
-        if(canGrow)
+        if(collidedWithYourself())
+            reset();
+        else if(canGrow)
             grow();
         setCurrentDirection(nextDirection);
         moveForward();

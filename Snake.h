@@ -61,12 +61,13 @@ class Snake {
 
     sf::Vector2i getHeadPosition() const;
     std::vector<sf::Vector2i> getPositions() const;
-
-    bool eat(const sf::Vector2i &foodPosition);
-
-    void grow();
     int getSize() const;
+    sf::Color getNextColor();
 
+    void reset();
+    void grow();
+    bool eat(const sf::Vector2i &foodPosition);
+    bool collidedWithYourself() const;
     void moveForward();
 
     void handleInput();
