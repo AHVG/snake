@@ -18,7 +18,7 @@ class Application {
     void handleUpdate();
     void handleRendering();
 
-    void generateApplePosition(std::vector<sf::Vector2i> snakePositions);
+    void generateFoodPosition();
 
     public:
 

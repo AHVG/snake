@@ -1,9 +1,13 @@
+#include <iostream>
+#include <stdlib.h>
+#include <time.h>
 #include "Window.h"
 #include "Application.h"
 #include "Field.h"
 
 Application::Application() : food(sf::Vector2i(10,10)){
     window = WindowInstance;
+    std::srand(time(NULL));
 }
 
 void Application::run(){
@@ -22,9 +26,8 @@ void Application::handleEvent(){
 }
 
 void Application::handleUpdate(){
-    if(snake.ate(food.getPosition())){
-        generateApplePosition(snake.getPositions());
-    }
+    if(snake.eat(food.getPosition()))
+        generateFoodPosition();
     snake.update();
 }
 
@@ -36,7 +39,24 @@ void Application::handleRendering(){
     window->display();
 }
 
-void Application::generateApplePosition(std::vector<sf::Vector2i> snakePositions){
-
+void Application::generateFoodPosition(){
+    std::vector<sf::Vector2i> snakePositions = snake.getPositions();
+    std::vector<sf::Vector2i> freePositions;
+    for(int line = 0; line < FieldInstance->getSize().y; line++){
+        for(int column = 0; column < FieldInstance->getSize().x; column++){
+            bool isFree = true;
+            sf::Vector2i targetPosition = sf::Vector2i(column, line);
+            for(auto position : snakePositions){
+                if(position == targetPosition){
+                    isFree = false;
+                    break;
+                }
+            }
+            if(isFree)
+                freePositions.push_back(sf::Vector2i(column, line));
+        }
+    }
+    food.setPosition(freePositions.at(std::rand()%freePositions.size()));
+    std::cout << "Aqui" << std::endl;
 }
 

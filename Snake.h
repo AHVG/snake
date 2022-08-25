@@ -62,7 +62,7 @@ class Snake {
     sf::Vector2i getHeadPosition() const;
     std::vector<sf::Vector2i> getPositions() const;
 
-    bool ate(const sf::Vector2i &foodPosition);
+    bool eat(const sf::Vector2i &foodPosition);
 
     void grow();
     int getSize() const;

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "Snake.h"
 #include "Window.h"
 
@@ -90,11 +91,12 @@ std::vector<sf::Vector2i> Snake::getPositions() const{
     return positions;
 }
 
-bool Snake::ate(const sf::Vector2i &foodPosition) {
-    canGrow = false;
-    if(getHeadPosition() == foodPosition)
-        return (canGrow = true);
-    return canGrow;
+bool Snake::eat(const sf::Vector2i &foodPosition) {
+    if(getHeadPosition() == foodPosition){
+        canGrow = true;
+        return true;
+    }
+    return false;
 }
 
 void Snake::grow(){

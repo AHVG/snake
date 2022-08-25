@@ -30,8 +30,8 @@ Field *Field::getInstance(){
 void Field::render(){
     sf::RectangleShape shape;
     shape.setSize(sf::Vector2f(getTileSize()));
-    for(int line = 0; line < getSize().x; line++){
-        for(int column = 0; column < getSize().y; column++){
+    for(int line = 0; line < getSize().y; line++){
+        for(int column = 0; column < getSize().x; column++){
             if((line + column) % 2)
                 shape.setFillColor(sf::Color(50,50,50));
             else
