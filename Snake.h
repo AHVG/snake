@@ -39,7 +39,7 @@ class Snake {
 
     private:
 
-    const int velocity = 300;
+    const int velocity = 200;
 
     sf::Vector2i currentDirection;
     sf::Vector2i nextDirection;
@@ -47,11 +47,16 @@ class Snake {
     sf::Clock clock;
 
     bool canGrow;
+    bool alive;
 
     public:
 
     Snake();
     ~Snake();
+
+    void revive();
+    void die();
+    bool isAlive() const;
 
     void setCurrentDirection(const sf::Vector2i &newDirection);
     sf::Vector2i getCurrentDirection() const;
@@ -60,8 +65,11 @@ class Snake {
     sf::Vector2i getNextDirection() const;
 
     sf::Vector2i getHeadPosition() const;
+
     std::vector<sf::Vector2i> getPositions() const;
+
     int getSize() const;
+
     sf::Color getNextColor();
 
     void reset();

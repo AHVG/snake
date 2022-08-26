@@ -22,13 +22,12 @@ class Application {
     void handleUpdate();
     void handleRendering();
 
-    void generateFoodPosition();
-
     public:
 
     Application();
 
     void run();
+    void changeState(ApplicationState *newState);
 
 };
 

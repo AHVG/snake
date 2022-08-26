@@ -55,6 +55,7 @@ Snake::Snake(){
     nextDirection = currentDirection;
     body.push_back(new BodyPart(sf::Vector2i(0,0), getNextColor()));
     canGrow = false;
+    alive = true;
 }
 
 Snake::~Snake(){
@@ -63,6 +64,18 @@ Snake::~Snake(){
         bodyPart = nullptr;
     }
     body.clear();
+}
+
+void Snake::revive(){
+    alive = true;
+}
+
+void Snake::die(){
+    alive = false;
+}
+
+bool Snake::isAlive() const{
+    return alive;
 }
 
 void Snake::setCurrentDirection(const sf::Vector2i &newDirection){
@@ -97,6 +110,7 @@ int Snake::getSize() const{
 }
 
 sf::Color Snake::getNextColor(){
+    return sf::Color::Red;
     int chosen = std::rand()%3;
     if(chosen == 0)
         return sf::Color::Red;
@@ -170,21 +184,20 @@ void Snake::handleInput(){
     else if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right) && getCurrentDirection().x != -1)
         setNextDirection(sf::Vector2i(1,0));
 
-    // TESTE
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::C))
-        eat(getHeadPosition());
 }
 
 void Snake::update(){
-    handleInput();
-    if(clock.getElapsedTime().asMilliseconds() >= velocity){
-        if(collidedWithYourself())
-            reset();
-        else if(canGrow)
-            grow();
-        setCurrentDirection(nextDirection);
-        moveForward();
-        clock.restart();
+    if(isAlive()){
+        handleInput();
+        if(clock.getElapsedTime().asMilliseconds() >= velocity){
+            if(collidedWithYourself())
+                die();
+            else if(canGrow)
+                grow();
+            setCurrentDirection(nextDirection);
+            moveForward();
+            clock.restart();
+        }
     }
 }
 

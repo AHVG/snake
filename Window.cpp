@@ -2,7 +2,7 @@
 
 Window *Window::instance = nullptr;
 
-Window::Window() : window(new sf::RenderWindow(sf::VideoMode(320, 320), "Snake")){}
+Window::Window() : window(new sf::RenderWindow(sf::VideoMode(420, 420), "Snake")){}
 
 Window *Window::getInstance(){
     if(instance == nullptr)
@@ -13,12 +13,3 @@ Window *Window::getInstance(){
 sf::RenderWindow *Window::getWindow() const{
     return window;
 }
-
-Window::~Window(){
-    if(instance != nullptr){
-        delete instance;
-        delete window;
-    }
-}
-
-

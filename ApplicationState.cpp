@@ -1,4 +1,5 @@
 #include "ApplicationState.h"
+#include "Window.h"
 #include "Field.h"
 
 ApplicationState::ApplicationState(Application *app) : owner(app){}
@@ -6,18 +7,44 @@ ApplicationState::ApplicationState(Application *app) : owner(app){}
 
 InMenu *InMenu::instance = nullptr;
 
-InMenu::InMenu(Application *app) : ApplicationState(app){}
+InMenu::InMenu(Application *app) : ApplicationState(app){
+    font.loadFromFile("./fonts/ARCADECLASSIC.ttf");
+    title.setFont(font);
+    title.setString("Snake");
+    title.setCharacterSize(80);
+    title.setOrigin(title.getLocalBounds().width/2.0, title.getLocalBounds().height/2.0);
+    title.setPosition(WindowInstance->getSize().x/2.0, title.getLocalBounds().height * 1.5);
+    title.setFillColor(sf::Color::Yellow);
+
+    subtitle.setFont(font);
+    subtitle.setString("By   Augusto");
+    subtitle.setCharacterSize(10);
+    subtitle.setOrigin(subtitle.getLocalBounds().width/2.0, subtitle.getLocalBounds().height/2.0);
+    subtitle.setPosition(WindowInstance->getSize().x/2.0, title.getLocalBounds().height * 3 + subtitle.getLocalBounds().height);
+    subtitle.setFillColor(sf::Color::Yellow);
+
+    play.setFont(font);
+    play.setString("press   enter   to   play");
+    play.setCharacterSize(25);
+    play.setOrigin(play.getLocalBounds().width/2.0, play.getLocalBounds().height/2.0);
+    play.setPosition(WindowInstance->getSize().x/2.0, WindowInstance->getSize().y * 2.0/3.0);
+}
 
 void InMenu::handleTrasition(){
-
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Enter))
+        owner->changeState(InGame::getInstance(owner));
 }
 
 void InMenu::handleUpdate(){
-
+    background.update();
 }
 
 void InMenu::handleRendering(){
-
+    sf::RenderWindow *window = WindowInstance;
+    background.render();
+    window->draw(title);
+    window->draw(subtitle);
+    window->draw(play);
 }
 
 InMenu *InMenu::getInstance(Application *app){
@@ -56,7 +83,9 @@ void InGame::generateFoodPosition(){
 }
 
 void InGame::handleTrasition(){
-
+    if(snake.isAlive() == false){
+        owner->changeState(InMenu::getInstance(owner));
+    }
 }
 
 void InGame::handleUpdate(){

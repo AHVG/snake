@@ -2,6 +2,7 @@
 #define APPLICATIONSTATE_H_INCLUDED
 
 #include "Application.h"
+#include "Background.h"
 #include "Snake.h"
 #include "Food.h"
 
@@ -33,6 +34,13 @@ class InMenu : public ApplicationState {
     InMenu(Application *app);
 
     static InMenu *instance;
+
+    sf::Font font;
+    sf::Text title;
+    sf::Text subtitle;
+    sf::Text play;
+
+    Background background;
 
     public:
 

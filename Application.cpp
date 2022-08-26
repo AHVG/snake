@@ -1,5 +1,4 @@
 #include <iostream>
-#include <stdlib.h>
 #include <time.h>
 #include "Window.h"
 #include "Application.h"
@@ -8,7 +7,7 @@
 Application::Application(){
     window = WindowInstance;
     std::srand(time(NULL));
-    currentState = InGame::getInstance(this);
+    currentState = InMenu::getInstance(this);
 }
 
 void Application::run(){
@@ -18,6 +17,10 @@ void Application::run(){
         handleUpdate();
         handleRendering();
     }
+}
+
+void Application::changeState(ApplicationState *newState){
+    currentState = newState;
 }
 
 void Application::handleEvent(){

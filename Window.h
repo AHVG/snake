@@ -11,7 +11,6 @@ class Window {
     sf::RenderWindow *window;
 
     Window();
-    ~Window();
 
     public:
 
