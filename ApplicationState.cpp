@@ -85,6 +85,7 @@ void InGame::generateFoodPosition(){
 void InGame::handleTrasition(){
     if(snake.isAlive() == false){
         owner->changeState(InMenu::getInstance(owner));
+        snake.reset();
     }
 }
 

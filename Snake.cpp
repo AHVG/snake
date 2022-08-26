@@ -51,6 +51,7 @@ const BodyPart &BodyPart::operator=(const BodyPart &other){
 
 
 Snake::Snake(){
+    currentColor = sf::Color(255,0,0);
     currentDirection = sf::Vector2i(0,1);
     nextDirection = currentDirection;
     body.push_back(new BodyPart(sf::Vector2i(0,0), getNextColor()));
@@ -110,26 +111,36 @@ int Snake::getSize() const{
 }
 
 sf::Color Snake::getNextColor(){
-    return sf::Color::Red;
-    int chosen = std::rand()%3;
-    if(chosen == 0)
-        return sf::Color::Red;
-    else if(chosen == 1)
-        return sf::Color::Green;
-    return sf::Color::Blue;
-}
+    unsigned int r = currentColor.r;
+    unsigned int g = currentColor.g;
+    unsigned int b = currentColor.b;
 
-void Snake::reset(){
-    for(auto &bodyPart : body){
-        delete bodyPart;
-        bodyPart = nullptr;
+    if(r == 255 && g < 255){
+        g += 20;
+        if(g > 255){
+            g = 255;
+        }
     }
-    body.clear();
+    else if(r > 0){
+        r -= 20;
+        if(r < 0){
+            r = 0;
+        }
+    }
+    else if(b < 255){
+        b += 20;
+        if(b > 255){
+            b = 255;
+        }
+    }
+    else if(g > 0){
+        g -= 255;
+        if(g < 0){
+            g = 0;
+        }
+    }
 
-    currentDirection = sf::Vector2i(0,1);
-    nextDirection = currentDirection;
-    body.push_back(new BodyPart(sf::Vector2i(0,0), getNextColor()));
-    canGrow = false;
+    return (currentColor = sf::Color(r, g, b));
 }
 
 bool Snake::eat(const sf::Vector2i &foodPosition) {
@@ -172,6 +183,21 @@ void Snake::moveForward(){
         head->setPosition(sf::Vector2i(headPos.x, FieldInstance->getSize().y - 1));
     if(headPos.y > FieldInstance->getSize().y - 1)
         head->setPosition(sf::Vector2i(headPos.x, 0));
+}
+
+void Snake::reset(){
+    for(auto &bodyPart : body){
+        delete bodyPart;
+        bodyPart = nullptr;
+    }
+    body.clear();
+
+    currentColor = sf::Color(255,0,0);
+    currentDirection = sf::Vector2i(0,1);
+    nextDirection = currentDirection;
+    body.push_back(new BodyPart(sf::Vector2i(0,0), getNextColor()));
+    canGrow = false;
+    alive = true;
 }
 
 void Snake::handleInput(){

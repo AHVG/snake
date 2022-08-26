@@ -43,8 +43,8 @@ class Background {
 
     sf::Clock clockUpdate;
     sf::Clock clockGeneration;
-    const int updateSpeed = 10;
-    const int generationSpeed = 50;
+    const int updateSpeed = 40;
+    const int generationSpeed = 40;
 
     void generateBlock();
 

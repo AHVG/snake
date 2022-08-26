@@ -49,6 +49,8 @@ class Snake {
     bool canGrow;
     bool alive;
 
+    sf::Color currentColor;
+
     public:
 
     Snake();
@@ -72,11 +74,12 @@ class Snake {
 
     sf::Color getNextColor();
 
-    void reset();
     void grow();
     bool eat(const sf::Vector2i &foodPosition);
     bool collidedWithYourself() const;
     void moveForward();
+
+    void reset();
 
     void handleInput();
     void update();

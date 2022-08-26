@@ -1,4 +1,3 @@
-#include <stdlib.h>
 #include "Background.h"
 #include "Window.h"
 
@@ -84,9 +83,9 @@ void Background::update(){
         clockGeneration.restart();
     }
 
-    if(blocks.size() > 0)
-        if(blocks.front()->getPosition().y > size.y)
-            blocks.pop_front();
+    for(auto &block : blocks)
+        if(block->getPosition().y > size.y)
+            blocks.remove(block);
 }
 
 void Background::render(){
